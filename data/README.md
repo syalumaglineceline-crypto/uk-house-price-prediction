@@ -51,6 +51,6 @@ Preprocessing decisions are designed to minimise information leakage between his
 
 ## Data Organisation
 
-Raw and processed data are kept separate:
+Raw and processed data are kept separate.
 
 
