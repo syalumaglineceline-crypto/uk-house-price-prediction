@@ -64,20 +64,4 @@ The project followed an end-to-end analytical workflow:
 - Cross-validation
 - Hyperparameter Tuning
 
-## Repository Structure
 
-```text
-uk-house-price-prediction/
-├── README.md
-├── requirements.txt
-├── notebooks/
-│   ├── 01_data_preparation.ipynb
-│   ├── 02_exploratory_analysis.ipynb
-│   ├── 03_machine_learning.ipynb
-│   ├── 04_neural_network.ipynb
-│   └── 05_model_evaluation.ipynb
-├── data/
-│   └── README.md
-└── results/
-    └── figures/
-```
