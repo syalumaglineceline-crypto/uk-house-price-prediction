@@ -1,56 +1,64 @@
 # Data
 
-This project uses monthly UK housing-market and macroeconomic indicators to model and forecast movements in average UK house prices.
+This project reconstructs a monthly UK housing-market dataset for January 2009 to April 2023 using authoritative public data sources and a reproducible, time-aware preparation workflow.
 
-The dataset brings together housing, mortgage, labour-market and wider economic indicators from authoritative UK public sources.
+## Target
 
-## Target Variable
+- **Average UK House Price**
+
+## Master dataset
+
+`processed/uk_housing_master_2009_2023.csv` contains the aligned monthly series used for analysis and feature construction:
 
 - Average UK House Price
-
-## Predictor Variables
-
-- Average House Price Annual Change
-- Transaction Volume
-- Number of Mortgage Approvals
-- Average House Price to Earnings Ratio
-- Average Quoted 2-Year Fixed Mortgage Rate (75% LTV)
-- Average Quoted 3-Year Fixed Mortgage Rate (75% LTV)
-- Gross Domestic Product (GDP)
+- 12-month House Price Change (descriptive only)
+- Sales Volume
 - Average Weekly Earnings
 - Unemployment Rate
-- Inflation Rate
-- Government Borrowing
-- Population
-- Year
-- Month
+- CPI Annual Inflation Rate
+- Monthly GDP/GVA Growth
+- Public Sector Net Borrowing excluding Public Sector Banks
+- Bank Rate at Month End
 
-## Data Sources
+## Modelling dataset
 
-The project uses publicly available data from authoritative UK sources, including:
+`processed/uk_housing_modelling_base.csv` is a leakage-aware one-month-ahead forecasting table. Each row predicts the next month's average UK house price using information dated at the forecast origin or earlier.
 
-- UK Government housing statistics
+The feature set includes:
+
+- lagged house prices
+- rolling house-price statistics
+- lagged housing-market and macroeconomic indicators
+- Bank Rate
+- calendar seasonality features
+
+Target-derived same-month variables are not used as predictors in the forecasting table.
+
+## Data sources
+
+The reconstruction uses authoritative UK sources including:
+
+- HM Land Registry / UK House Price Index
 - Office for National Statistics (ONS)
 - Bank of England
 
-A detailed data-source table will document the source, frequency, coverage and definition of each variable used in the final modelling dataset.
+Exact source series, coverage and reconstruction use are documented in `source_manifest.csv`.
 
-## Data Preparation
+## Data quality and provenance
 
-The reconstruction follows a reproducible and time-aware data preparation process, including:
+The preparation workflow:
 
-- aligning variables to a consistent monthly time index
-- validating data types and ranges
-- identifying duplicate and missing observations
-- applying appropriate missing-value treatment
-- checking consistency across source datasets
-- creating derived features where analytically justified
-- maintaining chronological ordering throughout the modelling workflow
+- aligns all observations to a monthly time index
+- validates chronology and duplicate dates
+- records source provenance for backfilled observations
+- checks missing values before modelling
+- keeps target-derived descriptive fields separate from predictive features
+- creates lagged and rolling features using historical information only
 
-Preprocessing decisions are designed to minimise information leakage between historical training data and future observations.
+`quality_report.txt` records the principal automated quality checks for the reconstructed dataset.
 
-## Data Organisation
+## Reproducibility
 
-Raw and processed data are kept separate.
+The modelling table is regenerated in `../notebooks/01_data_preparation.ipynb` from the master dataset. Transformations are implemented programmatically rather than through manual spreadsheet editing.
 
-
+See `../RECONSTRUCTION_NOTES.md` for the forecasting-design and feature-selection rationale.
