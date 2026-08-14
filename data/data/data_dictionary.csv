@@ -1,0 +1,20 @@
+column,definition,unit_or_format,role,file
+date,Observation month,YYYY-MM-DD,join key,master
+average_house_price_gbp,UK average house price,GBP,target,master
+house_price_12m_change_pct,12-month percentage change in UK average house price,percent,descriptive only; derived from target history,master
+sales_volume,UK HPI sales volume,transactions,candidate predictor,master
+sales_volume_source,Whether sales volume came from the Apr-2023 HPI vintage or later official backfill,text,provenance flag,master
+average_weekly_earnings_gbp,"AWE Whole Economy, seasonally adjusted total pay excluding arrears",GBP/week,candidate predictor,master
+unemployment_rate_pct,"UK unemployment rate age 16+, seasonally adjusted",percent,candidate predictor,master
+cpi_annual_rate_pct,"CPI annual rate, all items",percent,candidate predictor,master
+gdp_monthly_growth_pct,"GVA monthly period-on-period growth, CVM SA",percent,candidate predictor,master
+public_sector_net_borrowing_ex_banks_gbp_mn,Public sector net borrowing excluding public sector banks,GBP million,candidate predictor,master
+bank_rate_month_end_pct,Official Bank Rate effective at month end,percent,candidate predictor / portfolio extension,master
+target_house_price_next_month_gbp,Average UK house price in month t+1,GBP,forecast target,modelling
+house_price_lag_1m_gbp,Latest known HPI at forecast origin,GBP,lagged predictor,modelling
+house_price_lag_3m_gbp,House price 3 months before target,GBP,lagged predictor,modelling
+house_price_lag_12m_gbp,House price 12 months before target,GBP,seasonal lag predictor,modelling
+house_price_rolling_3m_mean_gbp,Mean of latest 3 HPI observations available at forecast origin,GBP,rolling predictor,modelling
+house_price_rolling_12m_mean_gbp,Mean of latest 12 HPI observations available at forecast origin,GBP,rolling predictor,modelling
+target_month_sin,Sine encoding of target calendar month,unitless,seasonality predictor,modelling
+target_month_cos,Cosine encoding of target calendar month,unitless,seasonality predictor,modelling
