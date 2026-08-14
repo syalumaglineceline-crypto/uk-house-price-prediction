@@ -53,7 +53,4 @@ Preprocessing decisions are designed to minimise information leakage between his
 
 Raw and processed data are kept separate:
 
-```text
-data/
-├── raw/
-└── processed/
+
