@@ -1,0 +1,8 @@
+feature,standardised_coefficient_gbp,absolute_coefficient_gbp
+house_price_lag_1m_gbp,27634.83318272479,27634.83318272479
+target_month_cos,-686.0018193353712,686.0018193353712
+house_price_lag_12m_gbp,-201.8460281059916,201.8460281059916
+target_month_sin,41.84039245223441,41.84039245223441
+house_price_lag_3m_gbp,-0.0,0.0
+house_price_rolling_12m_mean_gbp,-0.0,0.0
+house_price_rolling_3m_mean_gbp,0.0,0.0

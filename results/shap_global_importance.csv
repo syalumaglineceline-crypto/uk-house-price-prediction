@@ -1,0 +1,8 @@
+feature,mean_absolute_shap_gbp
+house_price_lag_1m_gbp,77445.95286696492
+target_month_cos,607.2012164110365
+house_price_lag_12m_gbp,481.36674457039453
+target_month_sin,37.27167517604462
+house_price_lag_3m_gbp,0.0
+house_price_rolling_12m_mean_gbp,0.0
+house_price_rolling_3m_mean_gbp,0.0
