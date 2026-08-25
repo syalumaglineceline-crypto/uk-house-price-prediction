@@ -1,43 +1,55 @@
 # Forecasting Future Trends in the UK Housing Market
 
-Machine-learning and neural-network forecasting of UK house prices, developed from an MSc Business Analytics industry project completed with Asset Dreams and subsequently reconstructed as a reproducible technical portfolio project.
+A one-month-ahead UK house-price forecasting project developed from my MSc Business Analytics industry work with Asset Dreams and later rebuilt as a reproducible portfolio project.
 
-## Project Overview
+The main focus is simple: use historical housing-market and economic data to estimate the **next month's average UK house price**, while keeping the modelling process realistic, leakage-aware and easy to reproduce.
 
-This project investigates one-month-ahead forecasting of the average UK house price using historical housing-market and economic data.
+> **Final model:** Autoregressive Lasso Regression  
+> **Forecast horizon:** One month ahead  
+> **Final test MAPE:** ~1.21%  
+> **Validation style:** Chronological / out-of-time
 
-The original MSc industry project explored a range of regression, ensemble and neural-network methods for UK house-price prediction. The portfolio reconstruction extends that work with a stricter forecasting design focused on chronological validation, leakage-aware feature engineering, reproducibility, explainability and responsible model evaluation.
+## What this project covers
 
-The final workflow covers the full analytical lifecycle from data reconstruction and preprocessing through exploratory analysis, classical machine learning, deep learning, final model comparison and SHAP-based explainability.
+The original MSc project explored regression, ensemble and neural-network methods for UK house-price prediction.
 
-## Forecasting Objective
+For the portfolio version, I rebuilt the workflow around a stricter forecasting setup, with emphasis on:
 
-The modelling task is to predict the **next month's average UK house price** using information available at the forecast origin.
+- chronological validation instead of random splitting;
+- lagged and rolling time-series features;
+- baseline forecasting models;
+- classical machine learning;
+- neural-network evaluation;
+- SHAP-based explainability;
+- reproducible pipeline code;
+- lightweight MLOps and decision-support components.
 
 The reconstructed dataset covers monthly observations from **January 2009 to April 2023**.
 
-The forecasting workflow deliberately avoids random train/test splitting. Instead, observations remain in chronological order so that model evaluation more closely reflects how a forecasting system would operate in practice.
-
 ## Data
 
-The project combines UK housing-market and macroeconomic indicators from authoritative public sources, including:
+The project combines housing-market and macroeconomic indicators from public UK sources, including:
 
 - UK House Price Index / HM Land Registry
 - Office for National Statistics
 - Bank of England
 - UK public-sector finance statistics
 
-The repository includes a reconstructed monthly master dataset, a leakage-aware modelling table, a data dictionary, a source manifest and documented data-quality checks.
+The repository includes a reconstructed monthly master dataset, a modelling table, a source manifest, a data dictionary and basic data-quality checks.
 
-## Modelling Approach
+## Forecasting setup
 
-### Forecasting baselines
+The target is the **next month's average UK house price**.
+
+The modelling workflow keeps observations in time order so the validation process reflects how a real forecasting system would behave.
+
+### Baselines
 
 - Persistence baseline
 - Annual-drift baseline
 - 12-month seasonal baseline
 
-### Classical machine learning
+### Machine-learning models
 
 - Linear Regression
 - Ridge Regression
@@ -47,13 +59,13 @@ The repository includes a reconstructed monthly master dataset, a leakage-aware 
 
 Hyperparameter tuning uses **expanding-window time-series cross-validation**.
 
-### Artificial Neural Network
+### Neural network
 
-A feed-forward neural network is implemented in **PyTorch** and evaluated under the same chronological framework as the classical models.
+A feed-forward neural network is implemented in **PyTorch** and evaluated under the same chronological setup as the classical models.
 
-The ANN workflow includes training-only scaling, ReLU activation, Adam optimisation, mean-squared-error loss, validation-based architecture selection, early stopping, deterministic random seeds and an untouched final test.
+The ANN workflow includes training-only scaling, ReLU activation, Adam optimisation, mean-squared-error loss, validation-based architecture selection, early stopping, deterministic random seeds and an untouched final test set.
 
-## Chronological Evaluation Design
+## Evaluation design
 
 The final modelling table contains **160 complete forecasting observations**.
 
@@ -63,13 +75,11 @@ The final modelling table contains **160 complete forecasting observations**.
 
 The final test period covers **May 2021 to April 2023** and is not used for model or hyperparameter selection.
 
-## Final Model
+## Final model and results
 
 The final selected model is **Autoregressive Lasso Regression**.
 
-It uses lagged and rolling house-price information together with month-of-year seasonality.
-
-### Final Test Performance
+It uses recent house-price history, rolling-price information and month-of-year seasonality.
 
 | Metric | Result |
 |---|---:|
@@ -78,31 +88,9 @@ It uses lagged and rolling house-price information together with month-of-year s
 | MAPE | ~1.21% |
 | R² | ~0.844 |
 
-The selected Lasso model outperformed the neural network and the simple persistence and drift baselines on the untouched test period.
+The Lasso model outperformed the neural network and the simple persistence and drift baselines on the untouched test period.
 
-An important finding is that adding the full set of macroeconomic indicators did **not automatically improve one-month-ahead forecasting accuracy**. Recent house-price history provided the strongest short-horizon signal.
-
-## Production-Style Forecasting Pipeline
-
-To extend the notebook-based research workflow into a more reusable forecasting system, the project also includes a modular Python pipeline for data preparation, feature engineering, model training, evaluation and one-month-ahead prediction.
-
-The pipeline preserves the original time-series methodology, including chronological validation, leakage-aware lag and rolling features, and the selected Autoregressive Lasso model.
-
-### Pipeline Components
-
-- `data_pipeline.py` – loads, validates and reconstructs the modelling dataset
-- `features.py` – generates lagged, rolling and seasonal time-series features
-- `train.py` – trains the selected Autoregressive Lasso model
-- `evaluate.py` – evaluates the model on the untouched final test period
-- `predict.py` – generates the next one-month-ahead forecast
-- `test_pipeline.py` – validates chronology, feature construction and pipeline execution
-- GitHub Actions – automatically runs pipeline tests on repository updates
-
-The workflow separates the **evaluation model** from the **deployment model**. The evaluation model preserves the final 24 observations as an untouched out-of-time test set, while the deployment model retrains the already-selected specification on all available labelled history before forecasting the next unseen month.
-
-A lightweight Streamlit interface provides a decision-support view of model performance, actual-versus-predicted values, forecast errors and the latest one-month-ahead forecast.
-
-This extension demonstrates reproducible forecasting, basic MLOps practices and the transition from experimental modelling to a reusable analytical decision-support workflow.
+One useful result from the project was that adding more macroeconomic variables did **not automatically improve short-horizon accuracy**. Recent house-price history remained the strongest signal for the one-month-ahead forecast.
 
 ## Explainability
 
@@ -111,24 +99,33 @@ The final model is interpreted using:
 - standardised Lasso coefficients;
 - SHAP values.
 
-Global SHAP analysis shows that the most recent lagged house price is the dominant contributor to the one-month-ahead forecast. Local SHAP analysis is also used to explain a difficult final-test prediction.
+Global SHAP analysis shows that the most recent lagged house price is the main contributor to the one-month-ahead forecast. Local SHAP analysis is also used to explain a difficult final-test prediction.
 
-SHAP values explain the model's mathematical behaviour and should not be interpreted as causal effects.
+SHAP is used here to explain model behaviour, not to claim causal relationships.
 
-## Responsible Modelling
+<details>
+<summary><strong>Production-style forecasting pipeline</strong></summary>
 
-The project explicitly documents key limitations:
+The notebook workflow is also wrapped in reusable Python modules so the project is not limited to exploratory notebooks.
 
-- the modelling sample contains only 160 monthly forecasting observations;
-- the target is a UK national average rather than a regional or property-level value;
-- official statistical series may be revised after publication;
-- a production system would need to account for actual data-publication lags;
-- unusual economic shocks are retained rather than removed as outliers;
-- model outputs should not be used as automated mortgage, valuation or investment decisions.
+The pipeline covers:
 
-See `MODEL_CARD.md` and `05_model_evaluation.ipynb` for the full assessment.
+- data loading and validation;
+- lagged, rolling and seasonal feature generation;
+- model training;
+- final out-of-time evaluation;
+- next-month prediction;
+- automated tests;
+- GitHub Actions checks;
+- a lightweight Streamlit decision-support interface.
 
-## Repository Structure
+The evaluation and deployment stages are kept separate. The evaluation model preserves the final 24 observations as an untouched test set. After model selection, the deployment version retrains the selected specification on all available labelled history before forecasting the next unseen month.
+
+This extension is intended to demonstrate reproducibility, basic MLOps practice and how an experimental forecasting model can be turned into a reusable analytical workflow.
+
+</details>
+
+## Repository structure
 
 ```text
 uk-house-price-prediction/
@@ -179,7 +176,7 @@ uk-house-price-prediction/
     └── lasso_coefficients.csv
 ```
 
-## Notebook Workflow
+## Notebook workflow
 
 ### `01_data_preparation.ipynb`
 
@@ -195,29 +192,42 @@ Builds forecasting baselines and classical machine-learning models using chronol
 
 ### `04_neural_network.ipynb`
 
-Implements and evaluates a PyTorch Artificial Neural Network under the same chronological forecasting framework.
+Implements and evaluates a PyTorch neural network under the same chronological forecasting framework.
 
 ### `05_model_evaluation.ipynb`
 
 Consolidates model results, evaluates residuals and uncertainty, performs SHAP explainability and documents the final model-selection decision.
 
+## Responsible modelling
+
+A few limitations are worth keeping visible:
+
+- the modelling sample contains only 160 monthly forecasting observations;
+- the target is a UK national average rather than a regional or property-level value;
+- official statistical series may be revised after publication;
+- a production system would need to reflect actual data-publication lags;
+- unusual economic shocks are retained rather than removed as outliers;
+- model outputs should not be used as automated mortgage, valuation or investment decisions.
+
+See `MODEL_CARD.md` and `05_model_evaluation.ipynb` for the fuller assessment.
+
 ## Technologies
 
 Python, pandas, NumPy, scikit-learn, PyTorch, SHAP, statsmodels, Matplotlib, Jupyter Notebook, Streamlit, GitHub Actions, joblib, time-series cross-validation, machine learning, deep learning and explainable AI.
 
-## Key Findings
+## Main takeaways
 
-1. Chronological validation can produce very different conclusions from random train/test splitting.
-2. Recent house-price history is highly informative for one-month-ahead national forecasting.
-3. More features do not automatically produce a better model.
-4. Tree ensembles can struggle to extrapolate a strongly trending target beyond the range observed during training.
-5. A neural network can be evaluated rigorously without assuming that deep learning must outperform simpler approaches.
-6. Regularised Lasso provided the strongest final out-of-time performance.
-7. Explainability, uncertainty and limitations are treated as part of model quality rather than optional additions.
-8. A forecasting model becomes more useful when it is supported by reproducible pipelines, automated checks and a decision-support interface.
+- Chronological validation can lead to very different conclusions from random splitting.
+- Recent house-price history is highly informative for short-horizon national forecasting.
+- More features do not automatically mean a better model.
+- Tree ensembles can struggle to extrapolate strongly trending targets.
+- Deep learning does not automatically outperform simpler models.
+- Regularised Lasso gave the strongest final out-of-time performance.
+- Explainability and limitations are part of the modelling process, not optional extras.
+- Reusable code, automated checks and a simple decision-support layer make the forecasting workflow more practical.
 
-## Project Context
+## Project context
 
 The original work was completed as an MSc Business Analytics industry project at Aston University in collaboration with Asset Dreams, a UK real-estate company.
 
-This repository is a reconstructed and extended technical portfolio version of that work. The extensions focus on stronger forecasting methodology, reproducibility, chronological validation, deep-learning evaluation, explainability, reusable pipeline design, basic MLOps practices and responsible modelling.
+This repository is a reconstructed and extended technical portfolio version of that work. The later extensions focus on forecasting methodology, reproducibility, chronological validation, explainability, reusable pipeline design, basic MLOps practices and responsible modelling.
