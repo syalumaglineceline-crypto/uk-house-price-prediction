@@ -51,6 +51,8 @@ The modelling workflow keeps observations in time order so the validation proces
 
 ### Machine-learning models
 
+#### Classical models
+
 - Linear Regression
 - Ridge Regression
 - Lasso Regression
@@ -59,9 +61,9 @@ The modelling workflow keeps observations in time order so the validation proces
 
 Hyperparameter tuning uses **expanding-window time-series cross-validation**.
 
-### Neural network
+#### Neural network
 
-A feed-forward neural network is implemented in **PyTorch** and evaluated under the same chronological setup as the classical models.
+A feed-forward Artificial Neural Network (ANN) is implemented in **PyTorch** and evaluated under the same chronological setup as the classical models.
 
 The ANN workflow includes training-only scaling, ReLU activation, Adam optimisation, mean-squared-error loss, validation-based architecture selection, early stopping, deterministic random seeds and an untouched final test set.
 
@@ -127,74 +129,64 @@ This extension is intended to demonstrate reproducibility, basic MLOps practice 
 
 ## Repository structure
 
-```text
-uk-house-price-prediction/
-├── README.md
-├── RECONSTRUCTION_NOTES.md
-├── MODEL_CARD.md
-├── requirements.txt
-├── config.yaml
-│
-├── app/
-│   └── streamlit_app.py
-│
-├── src/
-│   ├── __init__.py
-│   ├── data_pipeline.py
-│   ├── features.py
-│   ├── train.py
-│   ├── evaluate.py
-│   └── predict.py
-│
-├── tests/
-│   └── test_pipeline.py
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
-├── data/
-│   ├── README.md
-│   ├── data_dictionary.csv
-│   ├── quality_report.txt
-│   ├── source_manifest.csv
-│   └── processed/
-│       ├── uk_housing_master_2009_2023.csv
-│       └── uk_housing_modelling_base.csv
-│
-├── notebooks/
-│   ├── 01_data_preparation.ipynb
-│   ├── 02_exploratory_analysis.ipynb
-│   ├── 03_machine_learning.ipynb
-│   ├── 04_neural_network.ipynb
-│   └── 05_model_evaluation.ipynb
-│
-└── results/
-    ├── final_test_predictions.csv
-    ├── final_model_comparison.csv
-    ├── shap_global_importance.csv
-    └── lasso_coefficients.csv
-```
+- README.md
+- RECONSTRUCTION_NOTES.md
+- MODEL_CARD.md
+- requirements.txt
+- config.yaml
+- app/
+  - streamlit_app.py
+- src/
+  - __init__.py
+  - data_pipeline.py
+  - features.py
+  - train.py
+  - evaluate.py
+  - predict.py
+- tests/
+  - test_pipeline.py
+- .github/
+  - workflows/
+    - ci.yml
+- data/
+  - README.md
+  - data_dictionary.csv
+  - quality_report.txt
+  - source_manifest.csv
+  - processed/
+    - uk_housing_master_2009_2023.csv
+    - uk_housing_modelling_base.csv
+- notebooks/
+  - 01_data_preparation.ipynb
+  - 02_exploratory_analysis.ipynb
+  - 03_machine_learning.ipynb
+  - 04_neural_network.ipynb
+  - 05_model_evaluation.ipynb
+- results/
+  - final_test_predictions.csv
+  - final_model_comparison.csv
+  - shap_global_importance.csv
+  - lasso_coefficients.csv
 
 ## Notebook workflow
 
-### `01_data_preparation.ipynb`
+### 01 data preparation
 
 Reconstructs and validates the modelling dataset, creates leakage-aware lagged features and prepares the one-month-ahead forecasting table.
 
-### `02_exploratory_analysis.ipynb`
+### 02 exploratory analysis
 
 Explores house-price trends, economic indicators, seasonality, lag relationships, multicollinearity and the difference between price-level and price-change relationships.
 
-### `03_machine_learning.ipynb`
+### 03 machine learning
 
 Builds forecasting baselines and classical machine-learning models using chronological validation and time-series cross-validation.
 
-### `04_neural_network.ipynb`
+### 04 neural network
 
-Implements and evaluates a PyTorch neural network under the same chronological forecasting framework.
+Implements and evaluates a PyTorch Artificial Neural Network under the same chronological forecasting framework.
 
-### `05_model_evaluation.ipynb`
+### 05 model evaluation
 
 Consolidates model results, evaluates residuals and uncertainty, performs SHAP explainability and documents the final model-selection decision.
 
@@ -209,7 +201,7 @@ A few limitations are worth keeping visible:
 - unusual economic shocks are retained rather than removed as outliers;
 - model outputs should not be used as automated mortgage, valuation or investment decisions.
 
-See `MODEL_CARD.md` and `05_model_evaluation.ipynb` for the fuller assessment.
+See MODEL_CARD.md and 05_model_evaluation.ipynb for the fuller assessment.
 
 ## Technologies
 
