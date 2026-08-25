@@ -82,6 +82,28 @@ The selected Lasso model outperformed the neural network and the simple persiste
 
 An important finding is that adding the full set of macroeconomic indicators did **not automatically improve one-month-ahead forecasting accuracy**. Recent house-price history provided the strongest short-horizon signal.
 
+## Production-Style Forecasting Pipeline
+
+To extend the notebook-based research workflow into a more reusable forecasting system, the project also includes a modular Python pipeline for data preparation, feature engineering, model training, evaluation and one-month-ahead prediction.
+
+The pipeline preserves the original time-series methodology, including chronological validation, leakage-aware lag and rolling features, and the selected Autoregressive Lasso model.
+
+### Pipeline Components
+
+- `data_pipeline.py` – loads, validates and reconstructs the modelling dataset
+- `features.py` – generates lagged, rolling and seasonal time-series features
+- `train.py` – trains the selected Autoregressive Lasso model
+- `evaluate.py` – evaluates the model on the untouched final test period
+- `predict.py` – generates the next one-month-ahead forecast
+- `test_pipeline.py` – validates chronology, feature construction and pipeline execution
+- GitHub Actions – automatically runs pipeline tests on repository updates
+
+The workflow separates the **evaluation model** from the **deployment model**. The evaluation model preserves the final 24 observations as an untouched out-of-time test set, while the deployment model retrains the already-selected specification on all available labelled history before forecasting the next unseen month.
+
+A lightweight Streamlit interface provides a decision-support view of model performance, actual-versus-predicted values, forecast errors and the latest one-month-ahead forecast.
+
+This extension demonstrates reproducible forecasting, basic MLOps practices and the transition from experimental modelling to a reusable analytical decision-support workflow.
+
 ## Explainability
 
 The final model is interpreted using:
@@ -114,6 +136,26 @@ uk-house-price-prediction/
 ├── RECONSTRUCTION_NOTES.md
 ├── MODEL_CARD.md
 ├── requirements.txt
+├── config.yaml
+│
+├── app/
+│   └── streamlit_app.py
+│
+├── src/
+│   ├── __init__.py
+│   ├── data_pipeline.py
+│   ├── features.py
+│   ├── train.py
+│   ├── evaluate.py
+│   └── predict.py
+│
+├── tests/
+│   └── test_pipeline.py
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
 ├── data/
 │   ├── README.md
 │   ├── data_dictionary.csv
@@ -122,12 +164,14 @@ uk-house-price-prediction/
 │   └── processed/
 │       ├── uk_housing_master_2009_2023.csv
 │       └── uk_housing_modelling_base.csv
+│
 ├── notebooks/
 │   ├── 01_data_preparation.ipynb
 │   ├── 02_exploratory_analysis.ipynb
 │   ├── 03_machine_learning.ipynb
 │   ├── 04_neural_network.ipynb
 │   └── 05_model_evaluation.ipynb
+│
 └── results/
     ├── final_test_predictions.csv
     ├── final_model_comparison.csv
@@ -138,23 +182,28 @@ uk-house-price-prediction/
 ## Notebook Workflow
 
 ### `01_data_preparation.ipynb`
+
 Reconstructs and validates the modelling dataset, creates leakage-aware lagged features and prepares the one-month-ahead forecasting table.
 
 ### `02_exploratory_analysis.ipynb`
+
 Explores house-price trends, economic indicators, seasonality, lag relationships, multicollinearity and the difference between price-level and price-change relationships.
 
 ### `03_machine_learning.ipynb`
+
 Builds forecasting baselines and classical machine-learning models using chronological validation and time-series cross-validation.
 
 ### `04_neural_network.ipynb`
+
 Implements and evaluates a PyTorch Artificial Neural Network under the same chronological forecasting framework.
 
 ### `05_model_evaluation.ipynb`
+
 Consolidates model results, evaluates residuals and uncertainty, performs SHAP explainability and documents the final model-selection decision.
 
 ## Technologies
 
-Python, pandas, NumPy, scikit-learn, PyTorch, SHAP, statsmodels, Matplotlib, Jupyter Notebook, time-series cross-validation, machine learning, deep learning and explainable AI.
+Python, pandas, NumPy, scikit-learn, PyTorch, SHAP, statsmodels, Matplotlib, Jupyter Notebook, Streamlit, GitHub Actions, joblib, time-series cross-validation, machine learning, deep learning and explainable AI.
 
 ## Key Findings
 
@@ -165,9 +214,10 @@ Python, pandas, NumPy, scikit-learn, PyTorch, SHAP, statsmodels, Matplotlib, Jup
 5. A neural network can be evaluated rigorously without assuming that deep learning must outperform simpler approaches.
 6. Regularised Lasso provided the strongest final out-of-time performance.
 7. Explainability, uncertainty and limitations are treated as part of model quality rather than optional additions.
+8. A forecasting model becomes more useful when it is supported by reproducible pipelines, automated checks and a decision-support interface.
 
 ## Project Context
 
 The original work was completed as an MSc Business Analytics industry project at Aston University in collaboration with Asset Dreams, a UK real-estate company.
 
-This repository is a reconstructed and extended technical portfolio version of that work. The extensions focus on stronger forecasting methodology, reproducibility, chronological validation, deep-learning evaluation, explainability and responsible modelling.
+This repository is a reconstructed and extended technical portfolio version of that work. The extensions focus on stronger forecasting methodology, reproducibility, chronological validation, deep-learning evaluation, explainability, reusable pipeline design, basic MLOps practices and responsible modelling.
